@@ -7,7 +7,7 @@ Swift IOS Application
 ![image](https://user-images.githubusercontent.com/81229461/159762795-5505b295-4907-4bae-82ba-93b483289180.png)
 
 
-The TvFilms application is an application that will be a small pocket guide for you about all existing films and TV series in a convenient and intuitive interface. The following features will be available to the users of this application:
+The TvFilms is an application that will be a small pocket guide for you about all existing films and TV series in a convenient and intuitive interface. The following features will be available to the users of this application:
 
 1) View basic information on all famous movies, TV series and anime, including their description, ratings and trailer 
    ![image](https://user-images.githubusercontent.com/81229461/159761076-ea5b5843-443a-4190-85af-9ba53c43a3c2.png)
