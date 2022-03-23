@@ -15,8 +15,7 @@ The TvFilms application is an application that will be a small pocket guide for 
 2) Search for titles by their name and immediately go to the page with their detailed description
    ![image](https://user-images.githubusercontent.com/81229461/159761295-89062c9b-cc63-47ad-8ffe-70ea1d7ec9d7.png)
 
-3) Add your favorite titles to bookmarks to return to them later
-   The bookmarks screen stores all your added titles, which you can delete at any time
+3) Add your favorite titles to bookmarks to return to them later. The bookmarks screen stores all your added titles, which you can delete at any time
    ![image](https://user-images.githubusercontent.com/81229461/159760593-a2a2fda6-bcc0-4691-a003-86443791d1ab.png)
    
 4) View information on upcoming movies and TV series 
