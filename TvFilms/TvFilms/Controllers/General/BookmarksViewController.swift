@@ -11,20 +11,33 @@ class BookmarksViewController: UIViewController {
     
     //MARK: Properties
     
-    private var titles: [TitleStorageModel] = []
+    private var titles: [TitleStorageModel] = [] {
+        didSet {
+            deleteAllButton.isEnabled = !titles.isEmpty
+        }
+    }
     
     //MARK: - View
     
     private lazy var bookmarkTitlesTableView = UITableView(frame: .zero, style: .grouped)
     
+    private lazy var deleteAllButton: UIBarButtonItem = {
+        let button = UIBarButtonItem(
+            title: "Delete all",
+            style: .plain,
+            target: self,
+            action: #selector(deleteAllAction(_:))
+        )
+        button.tintColor = .systemRed
+        return button
+    }()
+    
     //MARK: - View Controller Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        title = "Bookmarks"
-        navigationController?.navigationBar.prefersLargeTitles = true
         view.backgroundColor = .systemBackground
+        setupNavigationBar()
         setupTableView()
     }
     
@@ -38,7 +51,20 @@ class BookmarksViewController: UIViewController {
         fetchStorageData()
     }
     
+    //MARK: - Ations
+    
+    @objc private func deleteAllAction(_ sender: UIBarButtonItem) {
+        guard sender == deleteAllButton else { return }
+        showDeleteAllAlert()
+    }
+    
     //MARK: - Private methods
+    
+    private func setupNavigationBar() {
+        title = "Bookmarks"
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.rightBarButtonItem = deleteAllButton
+    }
     
     private func setupTableView() {
         view.addSubview(bookmarkTitlesTableView)
@@ -61,28 +87,16 @@ class BookmarksViewController: UIViewController {
         }
     }
     
-    private func setupViewModel(with title: TitleStorageModel) -> TitleViewModel {
-        let titleModel = TitleViewModel(
-            name: (title.original_name ?? title.original_title) ?? "",
-            overview: title.overview ?? "",
-            posterURL: title.poster_path ?? "",
-            backgroundPosterPath: title.backdrop_path ?? "",
-            voteAverage: title.vote_average,
-            mediaType: title.media_type ?? ""
-        )
-        
-        return titleModel
-    }
-    
     private func deleteBookmark(at indexPath: IndexPath) {
-        StorageManager.shared.delete(titles[indexPath.row]) { error in
-            if let error = error {
-                print(error.localizedDescription)
-                return
-            }
-        }
+        StorageManager.shared.delete(titles[indexPath.row])
         titles.remove(at: indexPath.row)
         bookmarkTitlesTableView.deleteRows(at: [indexPath], with: .right)
+    }
+    
+    private func deleteAllBookmarks() {
+        StorageManager.shared.deleteAll()
+        titles.removeAll()
+        bookmarkTitlesTableView.reloadData()
     }
     
     private func deleteAction(indexPath: IndexPath) -> UIContextualAction {
@@ -92,6 +106,25 @@ class BookmarksViewController: UIViewController {
         }
         action.image = UIImage(systemName: "trash")
         return action
+    }
+    
+    private func showDeleteAllAlert() {
+        let alert = UIAlertController(
+            title: "All your bookmarks will be removed from your list",
+            message: "This action cannot be undone",
+            preferredStyle: .actionSheet
+        )
+        
+        let delete = UIAlertAction(title: "Delete bookmarks", style: .destructive) { [weak self] _ in
+            self?.deleteAllBookmarks()
+        }
+        
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel)
+        
+        alert.addAction(delete)
+        alert.addAction(cancel)
+        
+        present(alert, animated: true)
     }
 }
 
@@ -107,7 +140,15 @@ extension BookmarksViewController: UITableViewDataSource {
             return UITableViewCell()
         }
         
-        let titleModel = setupViewModel(with: titles[indexPath.row])
+        let title = titles[indexPath.row]
+        let titleModel = TitleViewModel(
+            name: (title.original_name ?? title.original_title) ?? "",
+            overview: title.overview ?? "",
+            posterURL: title.poster_path ?? "",
+            backgroundPosterPath: title.backdrop_path ?? "",
+            voteAverage: title.vote_average,
+            mediaType: title.media_type ?? ""
+        )
         cell.configure(with: titleModel)
         
         return cell

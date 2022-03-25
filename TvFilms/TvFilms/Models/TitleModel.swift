@@ -8,7 +8,8 @@
 import Foundation
 
 struct TitlesResponse: Decodable {
-    let results: [TitleModel]
+    let results: [TitleModel]?
+    let total_pages: Int?
 }
 
 struct TitleModel: Decodable {

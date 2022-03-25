@@ -181,8 +181,19 @@ class TitlePageViewController: UIViewController {
     
     @objc private func addToBookmarksButtonDidTapped() {
         guard let title = titleModel else { return }
-        StorageManager.shared.save(title)
-        showAlert(title: "Page has been added", message: "You can go to it on the Bookmarks page")
+        StorageManager.shared.save(title) { [weak self] isAdded in
+            if isAdded {
+                self?.showAddingToBookmarksAlert(
+                    title: "The page has been added",
+                    isSuccessfully: isAdded
+                )
+            } else {
+                self?.showAddingToBookmarksAlert(
+                    title: "This page has already been added",
+                    isSuccessfully: isAdded
+                )
+            }
+        }
     }
     
     //MARK: - Private methods
@@ -324,11 +335,14 @@ class TitlePageViewController: UIViewController {
         return label
     }
     
-    private func showAlert(title: String, message: String) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "OK", style: .default)
-        alert.addAction(okAction)
+    private func showAddingToBookmarksAlert(title: String, isSuccessfully: Bool) {
+        let alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
+
         present(alert, animated: true)
+        
+        Timer.scheduledTimer(withTimeInterval: 1.8, repeats: false) { _ in
+            alert.dismiss(animated: true)
+        }
     }
 }
 

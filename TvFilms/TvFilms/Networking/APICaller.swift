@@ -63,7 +63,7 @@ class APICaller {
 
     static let shared = APICaller()
     
-    func getTitles(from url: String, comlpletion: @escaping (Result<[TitleModel], Error>) -> Void) {
+    func getTitles(from url: String, completion: @escaping (Result<[TitleModel], Error>) -> Void) {
         guard let url = URL(string: url) else { return }
         let session = URLSession.shared
         let dataTask = session.dataTask(with: url) { data, _, error in
@@ -74,10 +74,11 @@ class APICaller {
             
             guard let data = data else { return }
             do {
-                let json = try JSONDecoder().decode(TitlesResponse.self, from: data)
-                comlpletion(.success(json.results))
+                let result = try JSONDecoder().decode(TitlesResponse.self, from: data)
+                guard let titles = result.results else { return }
+                completion(.success(titles))
             } catch let error {
-                comlpletion(.failure(error))
+                completion(.failure(error))
             }
         }
         dataTask.resume()
@@ -96,7 +97,8 @@ class APICaller {
             guard let data = data else { return }
             do {
                 let result = try JSONDecoder().decode(TitlesResponse.self, from: data)
-                completion(.success(result.results))
+                guard let titles = result.results else { return }
+                completion(.success(titles))
             } catch let error {
                 completion(.failure(error))
             }
@@ -117,8 +119,8 @@ class APICaller {
             
             guard let data = data else { return }
             do {
-                let json = try JSONDecoder().decode(YouTubeSearch.self, from: data)
-                guard let video = json.items?.first else {
+                let result = try JSONDecoder().decode(YouTubeSearch.self, from: data)
+                guard let video = result.items?.first else {
                     completion(.failure(APICallError.failedToGetData))
                     return
                 }

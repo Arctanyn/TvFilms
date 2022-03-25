@@ -24,7 +24,7 @@ class StorageManager {
     
     //MARK: - Methods
     
-    func save(_ title: TitleModel) {
+    func save(_ title: TitleModel, completion: ((_ isAdded: Bool) -> Void)?) {
         
         findObjectInStorage(title) { storedTitle in
             guard
@@ -32,7 +32,10 @@ class StorageManager {
                 let context = self.context,
                 let entityDescription = NSEntityDescription.entity(forEntityName: "TitleStorageModel", in: context),
                 let item = NSManagedObject(entity: entityDescription, insertInto: context) as? TitleStorageModel
-            else { return }
+            else {
+                completion?(false)
+                return
+            }
             
             item.id = Int64(title.id)
             item.backdrop_path = title.backdrop_path
@@ -46,6 +49,7 @@ class StorageManager {
             if context.hasChanges {
                 do {
                     try context.save()
+                    completion?(true)
                 } catch let error {
                     print(error.localizedDescription)
                 }
@@ -64,13 +68,27 @@ class StorageManager {
         }
     }
     
-    func delete(_ title: TitleStorageModel, completion: @escaping (Error?) -> Void) {
+    func delete(_ title: TitleStorageModel) {
         guard let context = context else { return }
         context.delete(title)
         do {
             try context.save()
         } catch let error {
-            completion(error)
+            print(error.localizedDescription)
+        }
+    }
+    
+    func deleteAll() {
+        guard let context = context else { return }
+
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "TitleStorageModel")
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+        
+        do {
+            try context.execute(deleteRequest)
+            try context.save()
+        } catch let error {
+            print(error.localizedDescription)
         }
     }
     
@@ -80,14 +98,18 @@ class StorageManager {
         guard let context = context else { return }
         
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "TitleStorageModel")
-        fetchRequest.predicate = NSPredicate(format: "original_name = %@", title.original_name ?? "")
+        fetchRequest.predicate = NSPredicate(format: "overview = %@", title.overview ?? "")
         
         do {
             guard let results = try context.fetch(fetchRequest) as? [NSManagedObject] else { return }
             if !results.isEmpty {
-                guard let title = results.first as? TitleStorageModel else { return }
-                print(title)
-                completion(title)
+                guard
+                    let storedTitle = results.first as? TitleStorageModel,
+                    storedTitle.original_name == title.original_name,
+                    storedTitle.original_title == title.original_title
+                else { return }
+                print(storedTitle)
+                completion(storedTitle)
             } else {
                 completion(nil)
             }
