@@ -30,7 +30,7 @@ class TitleTableViewCell: UITableViewCell {
     private lazy var titleNameLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = .systemFont(ofSize: 18, weight: .semibold)
+        label.font = .systemFont(ofSize: 18, weight: .heavy)
         label.numberOfLines = 2
         return label
     }()
@@ -47,6 +47,7 @@ class TitleTableViewCell: UITableViewCell {
     private lazy var titleVoteAverageLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16, weight: .heavy)
+        label.textAlignment = .right
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -100,13 +101,14 @@ class TitleTableViewCell: UITableViewCell {
         let voteAverageLabelConstraints = [
             titleVoteAverageLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20),
             titleVoteAverageLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            titleVoteAverageLabel.widthAnchor.constraint(equalToConstant: 30)
         ]
         
         contentView.addSubview(titleNameLabel)
         let titleNameLabelConstraints = [
             titleNameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20),
             titleNameLabel.leadingAnchor.constraint(equalTo: posterImageView.trailingAnchor, constant: 16),
-            titleNameLabel.trailingAnchor.constraint(equalTo: titleVoteAverageLabel.leadingAnchor, constant: -16)
+            titleNameLabel.trailingAnchor.constraint(equalTo: titleVoteAverageLabel.leadingAnchor, constant: -10)
         ]
         
         contentView.addSubview(titleOverviewLabel)

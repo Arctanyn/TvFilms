@@ -142,7 +142,7 @@ extension BookmarksViewController: UITableViewDataSource {
         
         let title = titles[indexPath.row]
         let titleModel = TitleViewModel(
-            name: (title.original_name ?? title.original_title) ?? "",
+            name: (title.name ?? title.original_name ?? title.original_title) ?? "",
             overview: title.overview ?? "",
             posterURL: title.poster_path ?? "",
             backgroundPosterPath: title.backdrop_path ?? "",
@@ -167,14 +167,14 @@ extension BookmarksViewController: UITableViewDelegate {
         let bookmark = titles[indexPath.row]
         let title = TitleModel(
             id: Int(bookmark.id),
+            name: bookmark.name,
             media_type: bookmark.media_type,
             original_name: bookmark.original_name,
             original_title: bookmark.original_title,
             poster_path: bookmark.poster_path,
             backdrop_path: bookmark.backdrop_path,
             overview: bookmark.overview,
-            vote_average: bookmark.vote_average,
-            release_date: bookmark.release_date
+            vote_average: bookmark.vote_average
         )
         let titlePageVC = TitlePageViewController()
         titlePageVC.modalPresentationStyle = .fullScreen

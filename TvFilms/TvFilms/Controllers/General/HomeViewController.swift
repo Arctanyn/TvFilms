@@ -20,6 +20,8 @@ class HomeViewController: UIViewController {
     
     //MARK: Properties
     
+    private var sourceURLs = SourceURL()
+    
     private let titlesGroupsNames: [TitlesGroup: String] = [
         .popular: "Popular",
         .trendingAnime: "Trending Anime",
@@ -91,10 +93,10 @@ class HomeViewController: UIViewController {
     
     private func setupHeaderView() {
         let titlesURLs = [
-            SourceURL.trendingTVs,
-            SourceURL.trendingMovies,
-            SourceURL.popularAnimeMovies,
-            SourceURL.popularAnimeTVs
+            sourceURLs.trendingTVs,
+            sourceURLs.trendingMovies,
+            sourceURLs.popularAnimeMovies,
+            sourceURLs.popularAnimeTVs
         ]
         let url = titlesURLs.randomElement()!
         APICaller.shared.getTitles(from: url) { [weak self] result in
@@ -149,17 +151,17 @@ extension HomeViewController: UITableViewDataSource {
         
         switch indexPath.section {
         case TitlesGroup.popular.rawValue:
-            titlesURL = SourceURL.popular
+            titlesURL = sourceURLs.popular
         case TitlesGroup.trendingAnime.rawValue:
-            titlesURL = SourceURL.popularAnimeTVs
+            titlesURL = sourceURLs.popularAnimeTVs
         case TitlesGroup.trendingAnimeMovies.rawValue:
-            titlesURL = SourceURL.popularAnimeMovies
+            titlesURL = sourceURLs.popularAnimeMovies
         case TitlesGroup.trendingMovies.rawValue:
-            titlesURL = SourceURL.trendingMovies
+            titlesURL = sourceURLs.trendingMovies
         case TitlesGroup.trendingTVs.rawValue:
-            titlesURL = SourceURL.trendingTVs
+            titlesURL = sourceURLs.trendingTVs
         case TitlesGroup.topRated.rawValue:
-            titlesURL = SourceURL.topRated
+            titlesURL = sourceURLs.topRated
         default:
             print("ATTENTION: The index is placed outside the index of groups")
             break

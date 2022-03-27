@@ -7,8 +7,8 @@
 
 import Foundation
 
-enum APICallError: Error {
-    case failedToGetData
+fileprivate enum APICallError: Error {
+    case dataExtrationError
 }
 
 fileprivate enum APIKeyType: String {
@@ -35,26 +35,29 @@ fileprivate struct URLConstants {
     }
 }
 
-//MARK: - Source URL
+//MARK: Source URL
 
 struct SourceURL {
+    
+    private lazy var TMDB_APIKey = URLConstants.getAPIKeys()?.value(forKey: APIKeyType.TMDB.rawValue) as? String
+    
     static let imagePath = "https://image.tmdb.org/t/p/w500" //+ poster path
     
-    static let search = "\(URLConstants.baseURL)/3/search/multi?api_key=\(URLConstants.getAPIKeys()?.value(forKey: APIKeyType.TMDB.rawValue) ?? "")&query="
+    private(set) lazy var search = "\(URLConstants.baseURL)/3/search/multi?api_key=\(TMDB_APIKey ?? "")&query="
     
-    static let popular = "\(URLConstants.baseURL)/3/tv/popular?api_key=\(URLConstants.getAPIKeys()?.value(forKey: APIKeyType.TMDB.rawValue) ?? "")&language=en-US"
+    private(set) lazy var popular = "\(URLConstants.baseURL)/3/tv/popular?api_key=\(TMDB_APIKey ?? "")&language=en-US"
     
-    static let popularAnimeTVs = "\(URLConstants.baseURL)/3/discover/tv?api_key=\(URLConstants.getAPIKeys()?.value(forKey: APIKeyType.TMDB.rawValue) ?? "")&sort_by=popularity.desc&page=1&with_keywords=210024"
+    private(set) lazy var popularAnimeTVs = "\(URLConstants.baseURL)/3/discover/tv?api_key=\(TMDB_APIKey ?? "")&sort_by=popularity.desc&page=1&with_keywords=210024"
     
-    static let popularAnimeMovies = "\(URLConstants.baseURL)/3/discover/movie?api_key=\(URLConstants.getAPIKeys()?.value(forKey: APIKeyType.TMDB.rawValue) ?? "")&sort_by=popularity.desc&page=1&with_keywords=210024"
+    private(set) lazy var popularAnimeMovies = "\(URLConstants.baseURL)/3/discover/movie?api_key=\(TMDB_APIKey ?? "")&sort_by=popularity.desc&page=1&with_keywords=210024"
     
-    static let trendingMovies = "\(URLConstants.baseURL)/3/trending/movie/day?api_key=\(URLConstants.getAPIKeys()?.value(forKey: APIKeyType.TMDB.rawValue) ?? "")&language=en-US"
+    private(set) lazy var trendingMovies = "\(URLConstants.baseURL)/3/trending/movie/day?api_key=\(TMDB_APIKey ?? "")&language=en-US"
     
-    static let trendingTVs = "\(URLConstants.baseURL)/3/trending/tv/day?api_key=\(URLConstants.getAPIKeys()?.value(forKey: APIKeyType.TMDB.rawValue) ?? "")&language=en-US"
+    private(set) lazy var trendingTVs = "\(URLConstants.baseURL)/3/trending/tv/day?api_key=\(TMDB_APIKey ?? "")&language=en-US"
     
-    static let upcoming = "\(URLConstants.baseURL)/3/movie/upcoming?api_key=\(URLConstants.getAPIKeys()?.value(forKey: APIKeyType.TMDB.rawValue) ?? "")&language=en-US"
+    private(set) lazy var upcoming = "\(URLConstants.baseURL)/3/movie/upcoming?api_key=\(TMDB_APIKey ?? "")&language=en-US"
     
-    static let topRated = "\(URLConstants.baseURL)/3/tv/top_rated?api_key=\(URLConstants.getAPIKeys()?.value(forKey: APIKeyType.TMDB.rawValue) ?? "")&language=en-US"
+    private(set) lazy var topRated = "\(URLConstants.baseURL)/3/tv/top_rated?api_key=\(TMDB_APIKey ?? "")&language=en-US"
 }
 
 //MARK: - API Caller
@@ -85,8 +88,9 @@ class APICaller {
     }
     
     func searchTitles(query: String, completion: @escaping (Result<[TitleModel], Error>) -> Void) {
+        var sourceURL = SourceURL()
         guard let query = query.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed),
-              let url = URL(string: "\(SourceURL.search)\(query)&include_adult=false")
+              let url = URL(string: "\(sourceURL.search)\(query)&include_adult=false")
         else { return }
         let session = URLSession.shared
         session.dataTask(with: url) { data, _, error in
@@ -121,7 +125,7 @@ class APICaller {
             do {
                 let result = try JSONDecoder().decode(YouTubeSearch.self, from: data)
                 guard let video = result.items?.first else {
-                    completion(.failure(APICallError.failedToGetData))
+                    completion(.failure(APICallError.dataExtrationError))
                     return
                 }
                 completion(.success(video))

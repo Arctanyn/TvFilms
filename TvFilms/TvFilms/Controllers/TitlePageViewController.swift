@@ -65,7 +65,7 @@ class TitlePageViewController: UIViewController {
         let label = UILabel()
         label.numberOfLines = 2
         label.textAlignment = .center
-        label.font = .systemFont(ofSize: 24, weight: .semibold)
+        label.font = .systemFont(ofSize: 22, weight: .heavy)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -139,7 +139,7 @@ class TitlePageViewController: UIViewController {
         let backgroundURL = SourceURL.imagePath + (title.backdrop_path ?? "")
         
         DispatchQueue.main.async { [weak self] in
-            self?.titleNameLabel.text = title.original_name ?? title.original_title
+            self?.titleNameLabel.text = (title.name ?? title.original_name ?? title.original_title) ?? ""
             self?.titleOverviewLabel.text = title.overview
         }
         
@@ -149,6 +149,7 @@ class TitlePageViewController: UIViewController {
                 posterImageView.image = image
             }
         }
+        
         DataProvider.shared.fetchData(from: backgroundURL) { [backgroundView] data in
             guard let imageData = data, let image = UIImage(data: imageData) else { return }
             DispatchQueue.main.async {
@@ -156,7 +157,8 @@ class TitlePageViewController: UIViewController {
             }
         }
         
-        APICaller.shared.getYouTubeVideo(query: "\((title.original_name ?? title.original_title) ?? "") official trailer") { [webView] result in
+        
+        APICaller.shared.getYouTubeVideo(query: "\((title.name ?? title.original_name ?? title.original_title) ?? "") official TV trailer") { [webView] result in
             switch result {
             case .success(let videoComponents):
                 guard let id = videoComponents.id?.videoId,

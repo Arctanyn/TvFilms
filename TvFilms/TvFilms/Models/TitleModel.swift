@@ -14,6 +14,7 @@ struct TitlesResponse: Decodable {
 
 struct TitleModel: Decodable {
     let id: Int
+    let name: String?
     let media_type: String?
     let original_name: String?
     let original_title: String?
@@ -21,5 +22,4 @@ struct TitleModel: Decodable {
     let backdrop_path: String?
     let overview: String?
     let vote_average: Double?
-    let release_date: String?
 }

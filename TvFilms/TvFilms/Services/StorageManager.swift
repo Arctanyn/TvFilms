@@ -38,12 +38,12 @@ class StorageManager {
             }
             
             item.id = Int64(title.id)
+            item.name = title.name
             item.backdrop_path = title.backdrop_path
             item.poster_path = title.poster_path
             item.original_title = title.original_title
             item.original_name = title.original_name
             item.overview = title.overview
-            item.release_date = title.release_date
             item.vote_average = title.vote_average ?? 0
 
             if context.hasChanges {
@@ -105,6 +105,7 @@ class StorageManager {
             if !results.isEmpty {
                 guard
                     let storedTitle = results.first as? TitleStorageModel,
+                    storedTitle.name == title.name,
                     storedTitle.original_name == title.original_name,
                     storedTitle.original_title == title.original_title
                 else { return }

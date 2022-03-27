@@ -12,6 +12,7 @@ class UpcomingTitlesViewController: UIViewController {
     //MARK: Properties
     
     private var titles: [TitleModel] = []
+    private var sourceURLs = SourceURL()
     
     //MARK: - View
     
@@ -43,7 +44,7 @@ class UpcomingTitlesViewController: UIViewController {
     }
     
     private func fetchUpcomingTitles() {
-        APICaller.shared.getTitles(from: SourceURL.upcoming) { [weak self] result in
+        APICaller.shared.getTitles(from: sourceURLs.upcoming) { [weak self] result in
             switch result {
             case .success(let titles):
                 self?.titles = titles
