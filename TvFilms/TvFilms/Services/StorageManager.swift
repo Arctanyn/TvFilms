@@ -103,14 +103,14 @@ class StorageManager {
         do {
             guard let results = try context.fetch(fetchRequest) as? [NSManagedObject] else { return }
             if !results.isEmpty {
-                guard
-                    let storedTitle = results.first as? TitleStorageModel,
-                    storedTitle.name == title.name,
-                    storedTitle.original_name == title.original_name,
-                    storedTitle.original_title == title.original_title
-                else { return }
-                print(storedTitle)
-                completion(storedTitle)
+                for result in results {
+                    guard let storedTitle = result as? TitleStorageModel else { return }
+                    if storedTitle.name == title.name, storedTitle.original_name == title.original_name, storedTitle.original_title == title.original_title {
+                        completion(storedTitle)
+                        return
+                    }
+                }
+                completion(nil)
             } else {
                 completion(nil)
             }
