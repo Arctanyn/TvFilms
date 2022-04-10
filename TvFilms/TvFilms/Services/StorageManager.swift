@@ -24,7 +24,7 @@ class StorageManager {
     
     //MARK: - Methods
     
-    func save(_ title: TitleModel, completion: ((_ isAdded: Bool) -> Void)?) {
+    func save(_ title: TitleModel) {
         
         findObjectInStorage(title) { storedTitle in
             guard
@@ -33,7 +33,6 @@ class StorageManager {
                 let entityDescription = NSEntityDescription.entity(forEntityName: "TitleStorageModel", in: context),
                 let item = NSManagedObject(entity: entityDescription, insertInto: context) as? TitleStorageModel
             else {
-                completion?(false)
                 return
             }
             
@@ -49,7 +48,6 @@ class StorageManager {
             if context.hasChanges {
                 do {
                     try context.save()
-                    completion?(true)
                 } catch let error {
                     print(error.localizedDescription)
                 }
@@ -78,6 +76,19 @@ class StorageManager {
         }
     }
     
+    func delete(_ title: TitleModel) {
+        guard let context = context else { return }
+        findObjectInStorage(title) { storageTitle in
+            guard let storageTitle = storageTitle else { return }
+            context.delete(storageTitle)
+            do {
+                try context.save()
+            } catch let error {
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
     func deleteAll() {
         guard let context = context else { return }
 
@@ -90,6 +101,14 @@ class StorageManager {
         } catch let error {
             print(error.localizedDescription)
         }
+    }
+    
+    func isInStorage(_ title: TitleModel) -> Bool {
+        var titleModel: TitleStorageModel?
+        findObjectInStorage(title) { storageTitle in
+            titleModel = storageTitle
+        }
+        return titleModel != nil ? true : false
     }
     
     //MARK: - Private methods

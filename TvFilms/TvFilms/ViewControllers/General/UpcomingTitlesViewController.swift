@@ -105,7 +105,7 @@ extension UpcomingTitlesViewController: UITableViewDelegate {
         let title = titles[indexPath.row]
         let configuration = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { [weak self] _ in
             let addToBookmarks = UIAction(title: "Add to bookmarks", image: UIImage(systemName: "bookmark")) { _ in
-                StorageManager.shared.save(title, completion: nil)
+                StorageManager.shared.save(title)
             }
             let learnMore = UIAction(title: "Learn more", image: UIImage(systemName: "ellipsis.circle")) { _ in
                 Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false) { [weak self] _ in

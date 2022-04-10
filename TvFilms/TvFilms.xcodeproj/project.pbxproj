@@ -124,7 +124,7 @@
 				3BCDA64B27E1C75900B831B1 /* Models */,
 				3BCDA63F27E1BDF600B831B1 /* Views */,
 				3BE63B1227E1D44800F5BFF1 /* ViewModels */,
-				3BCDA63427E1B96E00B831B1 /* Controllers */,
+				3BCDA63427E1B96E00B831B1 /* ViewControllers */,
 				3B66F24927E47C75003A6499 /* Extensions */,
 				3BCDA63327E1B96000B831B1 /* Supporting */,
 				3BCDA62C27E1B94F00B831B1 /* Info.plist */,
@@ -151,14 +151,14 @@
 			path = Supporting;
 			sourceTree = "<group>";
 		};
-		3BCDA63427E1B96E00B831B1 /* Controllers */ = {
+		3BCDA63427E1B96E00B831B1 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
 				3BCDA63D27E1BACC00B831B1 /* SearchViewController.swift */,
 				3BAF2D9027E5EC3F00049A44 /* TitlePageViewController.swift */,
 				3BAF2D9227E5FC3F00049A44 /* General */,
 			);
-			path = Controllers;
+			path = ViewControllers;
 			sourceTree = "<group>";
 		};
 		3BCDA63F27E1BDF600B831B1 /* Views */ = {
@@ -450,7 +450,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -478,7 +478,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

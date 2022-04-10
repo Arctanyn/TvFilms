@@ -13,6 +13,11 @@ class TitlePageViewController: UIViewController {
     //MARK: Properties
     
     private var titleModel: TitleModel?
+    private var isTitleInBookmarks = false {
+        didSet {
+            setupAddToBookmarksButton()
+        }
+    }
     
     //MARK: - View
     
@@ -98,11 +103,7 @@ class TitlePageViewController: UIViewController {
     private lazy var addToBookmarksButton: UIButton = {
         let button = UIButton()
         button.configuration = .tinted()
-        button.configuration?.image = UIImage(systemName: "bookmark")
-        button.configuration?.title = "Add to bookmarks"
         button.configuration?.imagePadding = 6
-        button.configuration?.baseBackgroundColor = .systemOrange
-        button.configuration?.baseForegroundColor = .orange
         button.addTarget(self, action: #selector(addToBookmarksButtonDidTapped), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -132,15 +133,40 @@ class TitlePageViewController: UIViewController {
     //MARK: - Methods
     
     func configure(with title: TitleModel, canAddBookmarks: Bool = true) {
-        
+        let model = TitleViewModel(of: title)
+        setupView(with: model)
         addToBookmarksButton.isHidden = !canAddBookmarks
-        
-        let posterURL = SourceURL.imagePath + (title.poster_path ?? "")
-        let backgroundURL = SourceURL.imagePath + (title.backdrop_path ?? "")
+        getTrailer(titleName: model.name)
+        isTitleInBookmarks = StorageManager.shared.isInStorage(title)
+        titleModel = title
+    }
+    
+    //MARK: - Ations
+    
+    @objc private func closeButtonDidTapped() {
+        dismiss(animated: true)
+    }
+    
+    @objc private func addToBookmarksButtonDidTapped() {
+        guard let title = titleModel else { return }
+        if isTitleInBookmarks {
+            StorageManager.shared.delete(title)
+            isTitleInBookmarks = false
+        } else {
+            StorageManager.shared.save(title)
+            isTitleInBookmarks = true
+        }
+    }
+    
+    //MARK: - Private methods
+    
+    private func setupView(with model: TitleViewModel) {
+        let posterURL = SourceURL.imagePath + model.posterURL
+        let backgroundURL = SourceURL.imagePath + model.backgroundPosterPath
         
         DispatchQueue.main.async { [weak self] in
-            self?.titleNameLabel.text = (title.name ?? title.original_name ?? title.original_title) ?? ""
-            self?.titleOverviewLabel.text = title.overview
+            self?.titleNameLabel.text = model.name
+            self?.titleOverviewLabel.text = model.overview
         }
         
         DataProvider.shared.fetchData(from: posterURL) { [posterImageView] data in
@@ -156,9 +182,24 @@ class TitlePageViewController: UIViewController {
                 backgroundView.setImage(image)
             }
         }
-        
-        
-        APICaller.shared.getYouTubeVideo(query: "\((title.name ?? title.original_name ?? title.original_title) ?? "") official TV trailer") { [webView] result in
+    }
+    
+    private func setupAddToBookmarksButton() {
+        if isTitleInBookmarks {
+            addToBookmarksButton.configuration?.image = UIImage(systemName: "bookmark.slash")
+            addToBookmarksButton.configuration?.title = "Delete bookmark"
+            addToBookmarksButton.configuration?.baseBackgroundColor = .systemRed
+            addToBookmarksButton.configuration?.baseForegroundColor = .red
+        } else {
+            addToBookmarksButton.configuration?.image = UIImage(systemName: "bookmark")
+            addToBookmarksButton.configuration?.title = "Add to bookmarks"
+            addToBookmarksButton.configuration?.baseBackgroundColor = .systemOrange
+            addToBookmarksButton.configuration?.baseForegroundColor = .orange
+        }
+    }
+    
+    private func getTrailer(titleName: String) {
+        APICaller.shared.getYouTubeVideo(query: "\(titleName) official TV trailer") { [webView] result in
             switch result {
             case .success(let videoComponents):
                 guard let id = videoComponents.id?.videoId,
@@ -171,34 +212,7 @@ class TitlePageViewController: UIViewController {
                 print(error.localizedDescription)
             }
         }
-        
-        titleModel = title
     }
-    
-    //MARK: - Ations
-    
-    @objc private func closeButtonDidTapped() {
-        dismiss(animated: true)
-    }
-    
-    @objc private func addToBookmarksButtonDidTapped() {
-        guard let title = titleModel else { return }
-        StorageManager.shared.save(title) { [weak self] isAdded in
-            if isAdded {
-                self?.showAddingToBookmarksAlert(
-                    title: "The page has been added",
-                    isSuccessfully: isAdded
-                )
-            } else {
-                self?.showAddingToBookmarksAlert(
-                    title: "This page has already been added",
-                    isSuccessfully: isAdded
-                )
-            }
-        }
-    }
-    
-    //MARK: - Private methods
     
     private func setScrollViewConstraints() {
         view.addSubview(scrollView)
@@ -335,16 +349,6 @@ class TitlePageViewController: UIViewController {
         label.font = .systemFont(ofSize: 17, weight: .semibold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
-    }
-    
-    private func showAddingToBookmarksAlert(title: String, isSuccessfully: Bool) {
-        let alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
-
-        present(alert, animated: true)
-        
-        Timer.scheduledTimer(withTimeInterval: 1.8, repeats: false) { _ in
-            alert.dismiss(animated: true)
-        }
     }
 }
 
