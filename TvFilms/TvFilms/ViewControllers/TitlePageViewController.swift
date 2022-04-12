@@ -15,7 +15,7 @@ class TitlePageViewController: UIViewController {
     private var titleModel: TitleModel?
     private var isTitleInBookmarks = false {
         didSet {
-            setupAddToBookmarksButton()
+            setupBookmarkButton()
         }
     }
     
@@ -100,10 +100,12 @@ class TitlePageViewController: UIViewController {
         return button
     }()
     
-    private lazy var addToBookmarksButton: UIButton = {
+    private lazy var bookmarkButton: UIButton = {
         let button = UIButton()
-        button.configuration = .tinted()
-        button.configuration?.imagePadding = 6
+        button.tintColor = .orange
+        button.backgroundColor = .black
+        button.layer.borderColor = UIColor.orange.cgColor
+        button.layer.borderWidth = 2
         button.addTarget(self, action: #selector(addToBookmarksButtonDidTapped), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -126,17 +128,12 @@ class TitlePageViewController: UIViewController {
         setContainerViewConstraints()
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-    }
-    
     //MARK: - Methods
     
-    func configure(with title: TitleModel, canAddBookmarks: Bool = true) {
+    func configure(with title: TitleModel) {
         let model = TitleViewModel(of: title)
         setupView(with: model)
-        addToBookmarksButton.isHidden = !canAddBookmarks
-        getTrailer(titleName: model.name)
+        getTitleTrailer(name: model.name)
         isTitleInBookmarks = StorageManager.shared.isInStorage(title)
         titleModel = title
     }
@@ -184,22 +181,13 @@ class TitlePageViewController: UIViewController {
         }
     }
     
-    private func setupAddToBookmarksButton() {
-        if isTitleInBookmarks {
-            addToBookmarksButton.configuration?.image = UIImage(systemName: "bookmark.slash")
-            addToBookmarksButton.configuration?.title = "Delete bookmark"
-            addToBookmarksButton.configuration?.baseBackgroundColor = .systemRed
-            addToBookmarksButton.configuration?.baseForegroundColor = .red
-        } else {
-            addToBookmarksButton.configuration?.image = UIImage(systemName: "bookmark")
-            addToBookmarksButton.configuration?.title = "Add to bookmarks"
-            addToBookmarksButton.configuration?.baseBackgroundColor = .systemOrange
-            addToBookmarksButton.configuration?.baseForegroundColor = .orange
-        }
+    private func setupBookmarkButton() {
+        let bookmarkImage = isTitleInBookmarks ? UIImage(systemName: "bookmark.fill") : UIImage(systemName: "bookmark")
+        bookmarkButton.setImage(bookmarkImage, for: .normal)
     }
     
-    private func getTrailer(titleName: String) {
-        APICaller.shared.getYouTubeVideo(query: "\(titleName) official TV trailer") { [webView] result in
+    private func getTitleTrailer(name: String) {
+        APICaller.shared.getYouTubeVideo(query: "\(name) official TV trailer") { [webView] result in
             switch result {
             case .success(let videoComponents):
                 guard let id = videoComponents.id?.videoId,
@@ -241,6 +229,16 @@ class TitlePageViewController: UIViewController {
         NSLayoutConstraint.activate([
             closeButton.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 10),
             closeButton.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10)
+        ])
+        
+        //Bookmark button
+        
+        containerView.addSubview(bookmarkButton)
+        NSLayoutConstraint.activate([
+            bookmarkButton.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 10),
+            bookmarkButton.widthAnchor.constraint(equalToConstant: 35),
+            bookmarkButton.heightAnchor.constraint(equalToConstant: 35),
+            bookmarkButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -10)
         ])
         
         //Poster image
@@ -305,15 +303,7 @@ class TitlePageViewController: UIViewController {
         let webViewConstraints = [
             webView.topAnchor.constraint(equalTo: titleTrailerSectionLabel.bottomAnchor, constant: 10),
             webView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-        ]
-        
-        //Add to bookmarks button
-        
-        containerView.addSubview(addToBookmarksButton)
-        let addToBookmarksButtonConstraints = [
-            addToBookmarksButton.topAnchor.constraint(equalTo: webView.bottomAnchor, constant: 20),
-            addToBookmarksButton.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-            addToBookmarksButton.bottomAnchor.constraint(lessThanOrEqualTo: containerView.bottomAnchor, constant: -10),
+            webView.bottomAnchor.constraint(lessThanOrEqualTo: containerView.bottomAnchor, constant: -10)
         ]
         
         //Activate constraints
@@ -326,7 +316,6 @@ class TitlePageViewController: UIViewController {
         NSLayoutConstraint.activate(titleOverviewLabelConstraints)
         NSLayoutConstraint.activate(titleTrailerSectionLabelConstraints)
         NSLayoutConstraint.activate(webViewConstraints)
-        NSLayoutConstraint.activate(addToBookmarksButtonConstraints)
     }
     
     private func setContainerViewConstraints() {

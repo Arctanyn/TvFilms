@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		3B3848E827E7BF5400C99CE2 /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3848E727E7BF5400C99CE2 /* StorageManager.swift */; };
 		3B3848EF27E7E90400C99CE2 /* TvFilmsModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3B3848ED27E7E90400C99CE2 /* TvFilmsModel.xcdatamodeld */; };
+		3B3E5850280590E100F57988 /* BookmarkTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3E584F280590E100F57988 /* BookmarkTableViewCell.swift */; };
 		3B48C89C27E60F6F0028D982 /* TitlePageBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B48C89B27E60F6F0028D982 /* TitlePageBackgroundView.swift */; };
 		3B90D17327E7531B00D35FE6 /* YouTubeSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B90D17227E7531B00D35FE6 /* YouTubeSearch.swift */; };
 		3BADCF6727E4B6E9008D129A /* TitleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BADCF6627E4B6E9008D129A /* TitleTableViewCell.swift */; };
@@ -35,6 +36,7 @@
 /* Begin PBXFileReference section */
 		3B3848E727E7BF5400C99CE2 /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
 		3B3848EE27E7E90400C99CE2 /* Title.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Title.xcdatamodel; sourceTree = "<group>"; };
+		3B3E584F280590E100F57988 /* BookmarkTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkTableViewCell.swift; sourceTree = "<group>"; };
 		3B48C89B27E60F6F0028D982 /* TitlePageBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitlePageBackgroundView.swift; sourceTree = "<group>"; };
 		3B90D17227E7531B00D35FE6 /* YouTubeSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubeSearch.swift; sourceTree = "<group>"; };
 		3BADCF6627E4B6E9008D129A /* TitleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleTableViewCell.swift; sourceTree = "<group>"; };
@@ -169,6 +171,7 @@
 				3BC9B69827E45D2600DFFEF3 /* HeaderCoverView.swift */,
 				3BADCF6627E4B6E9008D129A /* TitleTableViewCell.swift */,
 				3B48C89B27E60F6F0028D982 /* TitlePageBackgroundView.swift */,
+				3B3E584F280590E100F57988 /* BookmarkTableViewCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -287,6 +290,7 @@
 				3B3848EF27E7E90400C99CE2 /* TvFilmsModel.xcdatamodeld in Sources */,
 				3BAF2D9127E5EC3F00049A44 /* TitlePageViewController.swift in Sources */,
 				3BC9B69927E45D2600DFFEF3 /* HeaderCoverView.swift in Sources */,
+				3B3E5850280590E100F57988 /* BookmarkTableViewCell.swift in Sources */,
 				3BCDA64A27E1C75500B831B1 /* TitleModel.swift in Sources */,
 				3B48C89C27E60F6F0028D982 /* TitlePageBackgroundView.swift in Sources */,
 				3BCDA64327E1C02600B831B1 /* TitleCollectionViewCell.swift in Sources */,
@@ -446,7 +450,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "Arctanyn-Group.TvFilms";
+				PRODUCT_BUNDLE_IDENTIFIER = "Arctanyn-Group.TvFilmsApp";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -474,7 +478,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "Arctanyn-Group.TvFilms";
+				PRODUCT_BUNDLE_IDENTIFIER = "Arctanyn-Group.TvFilmsApp";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;

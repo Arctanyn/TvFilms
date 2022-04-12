@@ -19,7 +19,7 @@ class BookmarksViewController: UIViewController {
     
     //MARK: - View
     
-    private lazy var bookmarkTitlesTableView = UITableView(frame: .zero, style: .grouped)
+    private lazy var bookmarkTitlesTableView = UITableView(frame: .zero, style: .plain)
     
     private lazy var deleteAllButton: UIBarButtonItem = {
         let button = UIBarButtonItem(
@@ -42,7 +42,6 @@ class BookmarksViewController: UIViewController {
     }
     
     override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
         bookmarkTitlesTableView.frame = view.bounds
     }
     
@@ -68,7 +67,7 @@ class BookmarksViewController: UIViewController {
     
     private func setupTableView() {
         view.addSubview(bookmarkTitlesTableView)
-        bookmarkTitlesTableView.register(TitleTableViewCell.self, forCellReuseIdentifier: TitleTableViewCell.identifier)
+        bookmarkTitlesTableView.register(BookmarkTableViewCell.self, forCellReuseIdentifier: BookmarkTableViewCell.identifier)
         bookmarkTitlesTableView.delegate = self
         bookmarkTitlesTableView.dataSource = self
     }
@@ -136,7 +135,7 @@ extension BookmarksViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: TitleTableViewCell.identifier, for: indexPath) as? TitleTableViewCell else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: BookmarkTableViewCell.identifier, for: indexPath) as? BookmarkTableViewCell else {
             return UITableViewCell()
         }
         
@@ -159,7 +158,7 @@ extension BookmarksViewController: UITableViewDataSource {
 
 extension BookmarksViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 240
+        return 180
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -176,9 +175,11 @@ extension BookmarksViewController: UITableViewDelegate {
             overview: bookmark.overview,
             vote_average: bookmark.vote_average
         )
+        
         let titlePageVC = TitlePageViewController()
         titlePageVC.modalPresentationStyle = .fullScreen
-        titlePageVC.configure(with: title, canAddBookmarks: false)
+        titlePageVC.configure(with: title)
+        
         present(titlePageVC, animated: true)
     }
     

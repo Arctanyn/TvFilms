@@ -13,7 +13,7 @@ class SearchViewController: UIViewController {
         let controller = UISearchController()
         controller.searchBar.searchBarStyle = .minimal
         controller.searchBar.tintColor = .label
-        controller.searchBar.placeholder = "Search for a movie or A TV show"
+        controller.searchBar.placeholder = "Search for a movies, TV series or anime"
         controller.hidesNavigationBarDuringPresentation = false
         controller.automaticallyShowsCancelButton = true
         return controller
@@ -179,9 +179,6 @@ extension SearchViewController: UISearchBarDelegate {
     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         let title = titles[indexPath.row]
         let configuration = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { [weak self] _ in
-            let addToBookmarks = UIAction(title: "Add to bookmarks", image: UIImage(systemName: "bookmark")) { _ in
-                StorageManager.shared.save(title)
-            }
             let learnMore = UIAction(title: "Learn more", image: UIImage(systemName: "ellipsis.circle")) { _ in
                 Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false) { [weak self] _ in
                     let titlePageVC = TitlePageViewController()
@@ -190,7 +187,23 @@ extension SearchViewController: UISearchBarDelegate {
                     self?.present(titlePageVC, animated: true)
                 }
             }
-            return UIMenu(title: (title.original_name ?? title.original_title) ?? "", image: nil, children: [addToBookmarks, learnMore])
+            
+            let bookmarkAction: UIAction
+            
+            if StorageManager.shared.isInStorage(title) {
+                bookmarkAction = UIAction(
+                    title: "Delete bookmark",
+                    image: UIImage(systemName: "bookmark.slash"),
+                    attributes: .destructive) { _ in
+                        StorageManager.shared.delete(title)
+                    }
+            } else {
+                bookmarkAction = UIAction(title: "Add to bookmarks", image: UIImage(systemName: "bookmark")) { _ in
+                    StorageManager.shared.save(title)
+                }
+            }
+            
+            return UIMenu(title: (title.original_name ?? title.original_title) ?? "", image: nil, children: [bookmarkAction, learnMore])
         }
         return configuration
     }

@@ -54,7 +54,6 @@ class HomeViewController: UIViewController {
     }
     
     override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
         titlesCollectionTableView.frame = view.bounds
     }
     
