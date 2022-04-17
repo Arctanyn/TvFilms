@@ -30,7 +30,7 @@ class TitleTableViewCell: UITableViewCell {
     private lazy var titleNameLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = .systemFont(ofSize: 18, weight: .heavy)
+        label.font = .systemFont(ofSize: 18, weight: .semibold)
         label.numberOfLines = 2
         return label
     }()
@@ -74,10 +74,10 @@ class TitleTableViewCell: UITableViewCell {
         posterImageView.image = nil
         titleVoteAverageValue = model.voteAverage
         let imageURL = SourceURL.imagePath + model.posterURL
-        DataProvider.shared.fetchData(from: imageURL) { data in
+        DataProvider.shared.fetchData(from: imageURL) { [weak self] data in
             guard let imageData = data, let image = UIImage(data: imageData)
             else { return }
-            DispatchQueue.main.async { [weak self] in
+            DispatchQueue.main.async {
                 self?.posterImageView.image = image
                 self?.titleNameLabel.text = model.name
                 self?.titleOverviewLabel.text = model.overview

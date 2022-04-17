@@ -45,8 +45,8 @@ class BookmarksViewController: UIViewController {
         bookmarkTitlesTableView.frame = view.bounds
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         fetchStorageData()
     }
     
@@ -175,12 +175,7 @@ extension BookmarksViewController: UITableViewDelegate {
             overview: bookmark.overview,
             vote_average: bookmark.vote_average
         )
-        
-        let titlePageVC = TitlePageViewController()
-        titlePageVC.modalPresentationStyle = .fullScreen
-        titlePageVC.configure(with: title)
-        
-        present(titlePageVC, animated: true)
+        presentTitlePage(with: title)
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {

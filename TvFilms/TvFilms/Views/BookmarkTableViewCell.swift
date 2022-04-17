@@ -73,9 +73,7 @@ class BookmarkTableViewCell: UITableViewCell {
     
     private func fetchImage(_ imageURL: String) {
         DataProvider.shared.fetchData(from: imageURL) { [backgroundImage] data in
-            guard let imageData = data,
-                  let fetchedImage = UIImage(data: imageData)
-            else { return }
+            guard let imageData = data, let fetchedImage = UIImage(data: imageData) else { return }
             DispatchQueue.main.async {
                 backgroundImage.image = fetchedImage
             }

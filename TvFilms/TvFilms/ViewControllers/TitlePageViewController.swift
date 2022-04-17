@@ -124,8 +124,8 @@ class TitlePageViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         setScrollViewConstraints()
-        configureContainerView()
         setContainerViewConstraints()
+        configureContainerView()
     }
     
     //MARK: - Methods
@@ -303,7 +303,9 @@ class TitlePageViewController: UIViewController {
         let webViewConstraints = [
             webView.topAnchor.constraint(equalTo: titleTrailerSectionLabel.bottomAnchor, constant: 10),
             webView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-            webView.bottomAnchor.constraint(lessThanOrEqualTo: containerView.bottomAnchor, constant: -10)
+            webView.bottomAnchor.constraint(lessThanOrEqualTo: containerView.bottomAnchor, constant: -10),
+            webView.widthAnchor.constraint(equalTo: containerView.widthAnchor, multiplier: 0.9),
+            webView.heightAnchor.constraint(equalTo: webView.widthAnchor, multiplier: 0.6)
         ]
         
         //Activate constraints
@@ -327,9 +329,6 @@ class TitlePageViewController: UIViewController {
             containerView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             containerView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
         ])
-        
-        webView.widthAnchor.constraint(equalTo: containerView.widthAnchor, multiplier: 0.9).isActive = true
-        webView.heightAnchor.constraint(equalTo: webView.widthAnchor, multiplier: 0.6).isActive = true
     }
     
     private func setupSectionLabel(text: String) -> UILabel {

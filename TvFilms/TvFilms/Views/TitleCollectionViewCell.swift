@@ -42,10 +42,10 @@ class TitleCollectionViewCell: UICollectionViewCell {
     
     func configure(with model: TitleViewModel) {
         posterImageView.image = nil
-        DataProvider.shared.fetchData(from: SourceURL.imagePath + model.posterURL) { data in
+        DataProvider.shared.fetchData(from: SourceURL.imagePath + model.posterURL) { [posterImageView] data in
             guard let imageData = data, let image = UIImage(data: imageData) else { return }
-            DispatchQueue.main.async { [weak self] in
-                self?.posterImageView.image = image
+            DispatchQueue.main.async {
+                posterImageView.image = image
             }
         }
     }

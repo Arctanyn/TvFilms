@@ -85,9 +85,9 @@ class HeaderCoverView: UIView {
     
     func configure(with model: TitleViewModel) {
         let imageURL = SourceURL.imagePath + model.posterURL
-        DataProvider.shared.fetchData(from: imageURL) { data in
+        DataProvider.shared.fetchData(from: imageURL) { [weak self] data in
             guard let imageData = data, let image = UIImage(data: imageData) else { return }
-            DispatchQueue.main.async { [weak self] in
+            DispatchQueue.main.async {
                 self?.coverImageView.image = image
                 self?.titleNameLabel.text = model.name
                 self?.titleOverviewLabel.text = model.overview

@@ -59,13 +59,6 @@ class HomeViewController: UIViewController {
     
     //MARK: - Private methods
     
-    private func presentTitlePage(_ title: TitleModel) {
-        let titlePageVC = TitlePageViewController()
-        titlePageVC.configure(with: title)
-        titlePageVC.modalPresentationStyle = .fullScreen
-        present(titlePageVC, animated: true)
-    }
-    
     private func setupNavigationBar() {
         let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(goToSearch))
         searchButton.tintColor = .label
@@ -215,7 +208,7 @@ extension HomeViewController: UITableViewDelegate {
 
 extension HomeViewController: TitleCollectionTableViewCellDelegate {
     func cellDidSelect(with title: TitleModel) {
-        presentTitlePage(title)
+        presentTitlePage(with: title)
     }
 }
 
@@ -224,6 +217,6 @@ extension HomeViewController: TitleCollectionTableViewCellDelegate {
 extension HomeViewController: HeaderCoverViewDelegate {
     func learnMoreAbout(title: TitleViewModel) {
         guard let title = headerTitle else { return }
-        presentTitlePage(title)
+        presentTitlePage(with: title)
     }
 }

@@ -12,28 +12,21 @@ class DataProvider {
     static let shared = DataProvider()
     private var dataCache = NSCache<NSString, NSData>()
 
-    
     //MARK: - Methods
     
-    func fetchData(from imageURL: String, completion: @escaping (Data?) -> Void) {
-        guard let url = URL(string: imageURL) else { return }
-        if let cachedData = dataCache.object(forKey: imageURL as NSString) {
+    func fetchData(from url: String, completion: @escaping (Data?) -> Void) {
+        guard let url = URL(string: url) else { return }
+        if let cachedData = dataCache.object(forKey: url.absoluteString as NSString) {
             completion(cachedData as Data)
         } else {
-            let session = URLSession.shared
-            let dataTask = session.dataTask(with: url) { [weak self] data, _, error in
-                if let error = error {
-                    print(error.localizedDescription)
-                    return
-                }
-                guard let data = data else {
+            DispatchQueue.global(qos: .userInteractive).async { [dataCache] in
+                guard let data = try? Data(contentsOf: url) else {
                     completion(nil)
                     return
                 }
-                self?.dataCache.setObject(data as NSData, forKey: url.absoluteString as NSString)
+                dataCache.setObject(data as NSData, forKey: url.absoluteString as NSString)
                 completion(data)
             }
-            dataTask.resume()
         }
     }
 }

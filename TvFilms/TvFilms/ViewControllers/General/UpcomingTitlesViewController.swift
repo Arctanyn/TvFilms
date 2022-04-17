@@ -26,7 +26,13 @@ class UpcomingTitlesViewController: UIViewController {
         navigationController?.navigationBar.prefersLargeTitles = true
         view.backgroundColor = .systemBackground
         setupTableView()
-        fetchUpcomingTitles()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if titles.isEmpty {
+            fetchUpcomingTitles()
+        }
     }
     
     override func viewDidLayoutSubviews() {
@@ -55,14 +61,6 @@ class UpcomingTitlesViewController: UIViewController {
             }
         }
     }
-    
-    private func setupTitlePage(with title: TitleModel) {
-        let titlePageVC = TitlePageViewController()
-        titlePageVC.configure(with: title)
-        titlePageVC.modalPresentationStyle = .fullScreen
-        present(titlePageVC, animated: true)
-    }
-
 }
 
 //MARK: - UITableViewDataSource
@@ -94,37 +92,11 @@ extension UpcomingTitlesViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let titlePageVC = TitlePageViewController()
-        titlePageVC.configure(with: titles[indexPath.row])
-        titlePageVC.modalPresentationStyle = .fullScreen
-        present(titlePageVC, animated: true)
+        presentTitlePage(with: titles[indexPath.row])
     }
     
     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         let title = titles[indexPath.row]
-        let configuration = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { [weak self] _ in
-            let learnMore = UIAction(title: "Learn more", image: UIImage(systemName: "ellipsis.circle")) { _ in
-                Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false) { [weak self] _ in
-                    self?.setupTitlePage(with: title)
-                }
-            }
-            
-            let bookmarkAction: UIAction
-            
-            if StorageManager.shared.isInStorage(title) {
-                bookmarkAction = UIAction(
-                    title: "Delete bookmark",
-                    image: UIImage(systemName: "bookmark.slash"),
-                    attributes: .destructive) { _ in
-                        StorageManager.shared.delete(title)
-                    }
-            } else {
-                bookmarkAction = UIAction(title: "Add to bookmarks", image: UIImage(systemName: "bookmark")) { _ in
-                    StorageManager.shared.save(title)
-                }
-            }
-            return UIMenu(title: (title.original_name ?? title.original_title) ?? "", image: nil, children: [bookmarkAction, learnMore])
-        }
-        return configuration
+        return setupTitleContextMenu(title)
     }
 }

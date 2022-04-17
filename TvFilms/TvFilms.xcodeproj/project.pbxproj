@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3B1D37A6280C20500097A455 /* Extension + ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B1D37A5280C20500097A455 /* Extension + ViewController.swift */; };
 		3B3848E827E7BF5400C99CE2 /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3848E727E7BF5400C99CE2 /* StorageManager.swift */; };
 		3B3848EF27E7E90400C99CE2 /* TvFilmsModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3B3848ED27E7E90400C99CE2 /* TvFilmsModel.xcdatamodeld */; };
 		3B3E5850280590E100F57988 /* BookmarkTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3E584F280590E100F57988 /* BookmarkTableViewCell.swift */; };
@@ -34,6 +35,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3B1D37A5280C20500097A455 /* Extension + ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension + ViewController.swift"; sourceTree = "<group>"; };
 		3B3848E727E7BF5400C99CE2 /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
 		3B3848EE27E7E90400C99CE2 /* Title.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Title.xcdatamodel; sourceTree = "<group>"; };
 		3B3E584F280590E100F57988 /* BookmarkTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkTableViewCell.swift; sourceTree = "<group>"; };
@@ -86,6 +88,7 @@
 			isa = PBXGroup;
 			children = (
 				3BE2DFAC27E720A8006B3EB5 /* Extension + CAGradientLayer.swift */,
+				3B1D37A5280C20500097A455 /* Extension + ViewController.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -286,6 +289,7 @@
 				3BCDA62127E1B94F00B831B1 /* SceneDelegate.swift in Sources */,
 				3BE63B1427E1D46300F5BFF1 /* TitleViewModel.swift in Sources */,
 				3BCDA63C27E1BAC100B831B1 /* UpcomingTitlesViewController.swift in Sources */,
+				3B1D37A6280C20500097A455 /* Extension + ViewController.swift in Sources */,
 				3BCDA63627E1B9A400B831B1 /* MainTabBarController.swift in Sources */,
 				3B3848EF27E7E90400C99CE2 /* TvFilmsModel.xcdatamodeld in Sources */,
 				3BAF2D9127E5EC3F00049A44 /* TitlePageViewController.swift in Sources */,
@@ -442,6 +446,7 @@
 				INFOPLIST_FILE = TvFilms/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIStatusBarHidden = NO;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -470,6 +475,7 @@
 				INFOPLIST_FILE = TvFilms/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIStatusBarHidden = NO;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
