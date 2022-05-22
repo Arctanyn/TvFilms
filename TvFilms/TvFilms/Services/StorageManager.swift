@@ -10,59 +10,59 @@ import CoreData
 
 class StorageManager {
     
-    static let shared = StorageManager()
-    
     //MARK: Properties
     
     private let context: NSManagedObjectContext?
     
     //MARK: - Initialization
 
-    private init() {
+    init() {
         context = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext
     }
     
     //MARK: - Methods
     
-    func save(_ title: TitleModel) {
+    func save(_ title: TMDBTitle) {
+        guard
+            let context = self.context,
+            let entityDescription = NSEntityDescription.entity(
+                forEntityName: "TitleStorageModel",
+                in: context
+            ),
+            let item = NSManagedObject(entity: entityDescription, insertInto: context) as? TitleStorageModel
+        else { return }
         
-        findObjectInStorage(title) { storedTitle in
-            guard
-                storedTitle == nil,
-                let context = self.context,
-                let entityDescription = NSEntityDescription.entity(forEntityName: "TitleStorageModel", in: context),
-                let item = NSManagedObject(entity: entityDescription, insertInto: context) as? TitleStorageModel
-            else {
-                return
-            }
-            
-            item.id = Int64(title.id)
-            item.name = title.name
-            item.backdrop_path = title.backdrop_path
-            item.poster_path = title.poster_path
-            item.original_title = title.original_title
-            item.original_name = title.original_name
-            item.overview = title.overview
-            item.vote_average = title.vote_average ?? 0
+        item.titleID = Int64(title.id)
+        item.name = title.name
+        item.backdropPath = title.backdropPath
+        item.posterPath = title.posterPath
+        item.originalTitle = title.originalTitle
+        item.originalName = title.originalName
+        item.overview = title.overview
+        item.voteAverage = title.voteAverage ?? 0
+        item.voteCount = Int64(title.voteCount ?? 0)
+        item.popularity = title.popularity ?? 0
+        item.firstAirDate = title.firstAirDate
+        
 
-            if context.hasChanges {
-                do {
-                    try context.save()
-                } catch let error {
-                    print(error.localizedDescription)
-                }
+        if context.hasChanges {
+            do {
+                try context.save()
+            } catch let error {
+                print(error.localizedDescription)
             }
         }
     }
     
-    func fetchData(_ completion: @escaping (Result<[TitleStorageModel], Error>) -> Void) {
+    func fetchData(_ completion: @escaping ([TitleStorageModel]?) -> Void) {
         guard let context = context else { return }
         let request: NSFetchRequest<TitleStorageModel> = TitleStorageModel.fetchRequest()
         do {
             let fetchedTitles = try context.fetch(request)
-            completion(.success(fetchedTitles))
+            completion(fetchedTitles)
         } catch let error {
-            completion(.failure(error))
+            completion(nil)
+            print(error.localizedDescription)
         }
     }
     
@@ -76,7 +76,7 @@ class StorageManager {
         }
     }
     
-    func delete(_ title: TitleModel) {
+    func delete(_ title: TMDBTitle) {
         guard let context = context else { return }
         findObjectInStorage(title) { storageTitle in
             guard let storageTitle = storageTitle else { return }
@@ -103,7 +103,7 @@ class StorageManager {
         }
     }
     
-    func isInStorage(_ title: TitleModel) -> Bool {
+    func isInStorage(_ title: TMDBTitle) -> Bool {
         var titleModel: TitleStorageModel?
         findObjectInStorage(title) { storageTitle in
             titleModel = storageTitle
@@ -113,21 +113,19 @@ class StorageManager {
     
     //MARK: - Private methods
     
-    private func findObjectInStorage(_ title: TitleModel, completion: @escaping (TitleStorageModel?) -> Void) {
+    private func findObjectInStorage(_ title: TMDBTitle, completion: @escaping (TitleStorageModel?) -> Void) {
         guard let context = context else { return }
         
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "TitleStorageModel")
-        fetchRequest.predicate = NSPredicate(format: "overview = %@", title.overview ?? "")
+        fetchRequest.predicate = NSPredicate(format: "titleID = %@", "\(title.id)")
         
         do {
             guard let results = try context.fetch(fetchRequest) as? [NSManagedObject] else { return }
             if !results.isEmpty {
                 for result in results {
                     guard let storedTitle = result as? TitleStorageModel else { return }
-                    if storedTitle.name == title.name, storedTitle.original_name == title.original_name, storedTitle.original_title == title.original_title {
-                        completion(storedTitle)
-                        return
-                    }
+                    completion(storedTitle)
+                    return
                 }
                 completion(nil)
             } else {
