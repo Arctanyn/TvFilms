@@ -267,7 +267,6 @@
 				3B9623CC283817C7009CB789 /* SearchModule */,
 				3B6EB21B2838F7DA000B1B2D /* UpcomingTitlesModule */,
 				3B6EB21C2838F7F9000B1B2D /* BookmarksModule */,
-				3B66F24927E47C75003A6499 /* Extensions */,
 			);
 			path = Modules;
 			sourceTree = "<group>";
@@ -367,6 +366,7 @@
 				3B01DA31282BCBC300C54E1F /* Services */,
 				3B6EB2192838F6B2000B1B2D /* View */,
 				3B6F649328356AF80083D523 /* Modules */,
+				3B66F24927E47C75003A6499 /* Extensions */,
 				3BCDA63327E1B96000B831B1 /* Supporting */,
 				3BCDA62C27E1B94F00B831B1 /* Info.plist */,
 				3B3848ED27E7E90400C99CE2 /* TvFilmsModel.xcdatamodeld */,
