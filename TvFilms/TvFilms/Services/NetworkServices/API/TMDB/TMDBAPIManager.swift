@@ -1,5 +1,5 @@
 //
-//  APIManagerTMDB.swift
+//  TMDBAPIManager.swift
 //  TvFilms
 //
 //  Created by Малиль Дугулюбгов on 06.05.2022.
@@ -16,7 +16,6 @@ enum TitlesCategory: Int, CaseIterable {
     case trendingMovies
     case topRatedTVs
     case topRatedMovies
-//    case upcomingTVs
     case upcomingMovies
     
     var name: String {
@@ -29,7 +28,6 @@ enum TitlesCategory: Int, CaseIterable {
         case .trendingMovies: return "Trending movies"
         case .topRatedTVs: return "Top rated TV"
         case .topRatedMovies: return "Top rated movies"
-//        case .upcomingTVs: return "Upcoming TVs"
         case .upcomingMovies: return "Upcoming movies"
         }
     }
@@ -76,7 +74,7 @@ fileprivate enum APIType {
 }
 
 
-class APIManagerTMDB {
+class TMDBAPIManager {
     
     //MARK: Properties
     
@@ -179,8 +177,6 @@ class APIManagerTMDB {
             return APIType.topRated(mediaType: .tv)
         case .topRatedMovies:
             return APIType.topRated(mediaType: .movie)
-//        case .upcomingTVs:
-//            return APIType.upcoming(mediaType: .tv)
         case .upcomingMovies:
             return APIType.upcoming(mediaType: .movie)
         }

@@ -151,13 +151,22 @@ class TitlePageViewController: UIViewController {
     private func updateUI() {
         titleNameLabel.text = viewModel.titleName
         titleOverviewLabel.text = viewModel.overview
-        titleVoteAverageLabel.text = viewModel.voteAverage
+        updateVoteAverageLabel()
         setupBookmarkButton()
-        fetchImages()
+        updateImages()
         loadWebView()
     }
     
-    private func fetchImages() {
+    private func updateVoteAverageLabel() {
+        guard let voteAverageValue = viewModel.voteAverage else { return }
+        if voteAverageValue > 0 {
+            titleVoteAverageLabel.text = voteAverageValue < 10 ? "\(voteAverageValue) / 10" : "\(Int(voteAverageValue)) / 10"
+        } else {
+            titleVoteAverageLabel.text = "No ratings"
+        }
+    }
+    
+    private func updateImages() {
         viewModel.fetchPosterImage { [unowned self] imageData in
             guard
                 let imageData = imageData,
@@ -218,13 +227,10 @@ class TitlePageViewController: UIViewController {
     }
     
     private func configureContainerView() {
-        //Posters
         setPostersConstraints()
         
-        //Buttons
         setActionButtonsConstraints()
         
-        //Title name
         containerView.addSubview(titleNameLabel)
         NSLayoutConstraint.activate([
             titleNameLabel.topAnchor.constraint(equalTo: posterImageView.bottomAnchor, constant: 10),
@@ -232,19 +238,15 @@ class TitlePageViewController: UIViewController {
             titleNameLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -20),
             titleNameLabel.bottomAnchor.constraint(lessThanOrEqualTo: backgroundView.bottomAnchor, constant: -10)
         ])
-        
-        //Votes block
+
         setRatingBlockConstraints()
-        
-        //Overview block
+
         setOverviewBlockConstraints()
-        
-        //Trailer block
+
         setTrailerBlockConstraints()
     }
     
     private func setPostersConstraints() {
-        //Background image
         containerView.addSubview(backgroundView)
         let backgroundImageConstrains = [
             backgroundView.topAnchor.constraint(equalTo: containerView.topAnchor),
@@ -252,7 +254,6 @@ class TitlePageViewController: UIViewController {
             backgroundView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor)
         ]
         
-        //Poster image
         containerView.addSubview(posterImageView)
         let posterImageConstraints = [
             posterImageView.topAnchor.constraint(equalTo: backgroundView.topAnchor, constant: 10),
@@ -266,14 +267,12 @@ class TitlePageViewController: UIViewController {
     }
     
     private func setActionButtonsConstraints() {
-        //Close button
         containerView.addSubview(closeButton)
         NSLayoutConstraint.activate([
             closeButton.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 10),
             closeButton.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10)
         ])
         
-        //Bookmark button
         containerView.addSubview(bookmarkButton)
         NSLayoutConstraint.activate([
             bookmarkButton.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 10),
@@ -284,15 +283,12 @@ class TitlePageViewController: UIViewController {
     }
     
     private func setRatingBlockConstraints() {
-        
-        //Star image
         containerView.addSubview(starImageView)
         let starImageViewConstraints = [
             starImageView.topAnchor.constraint(equalTo: backgroundView.bottomAnchor, constant: 10),
             starImageView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16)
         ]
         
-        //Vote label
         containerView.addSubview(titleVoteAverageLabel)
         let titleVoteAverageLabelConstraints = [
             titleVoteAverageLabel.leadingAnchor.constraint(equalTo: starImageView.trailingAnchor, constant: 5),
@@ -304,14 +300,12 @@ class TitlePageViewController: UIViewController {
     }
     
     private func setOverviewBlockConstraints() {
-        //Overview block label
         containerView.addSubview(overviewBlockLabel)
         let overviewBlockLabelConstraints = [
             overviewBlockLabel.topAnchor.constraint(equalTo: starImageView.bottomAnchor, constant: 20),
             overviewBlockLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16)
         ]
         
-        //Title overview
         containerView.addSubview(titleOverviewLabel)
         let titleOverviewLabelConstraints = [
             titleOverviewLabel.topAnchor.constraint(equalTo: overviewBlockLabel.bottomAnchor, constant: 5),
@@ -324,14 +318,12 @@ class TitlePageViewController: UIViewController {
     }
     
     private func setTrailerBlockConstraints() {
-        //Trailer block label
         containerView.addSubview(trailerBlockLabel)
         let trailerBlockLabelConstraints = [
             trailerBlockLabel.topAnchor.constraint(equalTo: titleOverviewLabel.bottomAnchor, constant: 20),
             trailerBlockLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
         ]
         
-        //Web view
         containerView.addSubview(webView)
         let webViewConstraints = [
             webView.topAnchor.constraint(equalTo: trailerBlockLabel.bottomAnchor, constant: 10),

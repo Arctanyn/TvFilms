@@ -17,19 +17,7 @@ class TitlePreviewTableViewCell: UITableViewCell {
     
     var viewModel: TitlePreviewCellViewModelProtocol! {
         didSet {
-            titleNameLabel.text = viewModel.titleName
-            titleOverviewLabel.text = viewModel.overview
-            if let voteAverage = viewModel.voteAverage, voteAverage != 0 {
-                titleVoteAverageLabel.text = "\(voteAverage)"
-                titleVoteAverageLabel.textColor = determineVoteAverageColor(with: voteAverage)
-            }
-            if self.titleID == viewModel.titleID {
-                posterImageView.image = nil
-                viewModel.fetchPosterImage { [weak self] imageData in
-                    guard let imageData = imageData else { return }
-                    self?.posterImageView.image = UIImage(data: imageData)
-                }
-            } else { posterImageView.image = nil }
+            updateUI()
         }
     }
     
@@ -82,6 +70,39 @@ class TitlePreviewTableViewCell: UITableViewCell {
     }
 
     //MARK: - Private methods
+    
+    private func updateUI() {
+        titleNameLabel.text = viewModel.titleName
+        titleOverviewLabel.text = viewModel.overview
+        updateTitleVoteAverageLabel()
+        updatePosterImage()
+    }
+    
+    private func updatePosterImage() {
+        guard self.titleID == viewModel.titleID else {
+            posterImageView.image = nil
+            return
+        }
+        
+        posterImageView.image = nil
+        viewModel.fetchPosterImage { [weak self] imageData in
+            guard let imageData = imageData else { return }
+            self?.posterImageView.image = UIImage(data: imageData)
+        }
+    }
+    
+    private func updateTitleVoteAverageLabel() {
+        guard
+            let voteAverageValue = viewModel.voteAverage,
+            voteAverageValue > 0
+        else {
+            titleVoteAverageLabel.text = nil
+            return
+        }
+        
+        titleVoteAverageLabel.text = voteAverageValue < 10 ? "\(voteAverageValue)" : "\(Int(voteAverageValue))"
+        titleVoteAverageLabel.textColor = determineVoteAverageColor(with: voteAverageValue)
+    }
     
     private func determineVoteAverageColor(with value: Double) -> UIColor {
         switch value {

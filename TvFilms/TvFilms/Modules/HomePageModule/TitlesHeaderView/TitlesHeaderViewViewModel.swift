@@ -46,7 +46,7 @@ class TitlesHeaderViewViewModel: TitlesHeaderViewViewModelProtocol {
         }
     }
     
-    func fetchImageData(completion: @escaping(Data?) -> Void) {
+    func fetchImageData(completion: @escaping (Data?) -> Void) {
         guard let url = title?.posterPath else { return }
         apiDataExtractor.fetchImageData(from: url) { imageData in
             completion(imageData)

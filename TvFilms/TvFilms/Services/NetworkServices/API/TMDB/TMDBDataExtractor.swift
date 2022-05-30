@@ -8,10 +8,10 @@
 import Foundation
 
 class TMDBDataExtractor {
-    private let apiManager: APIManagerTMDB
+    private let apiManager: TMDBAPIManager
     
     init(apiKey: String) {
-        apiManager = APIManagerTMDB(apiKey: apiKey)
+        apiManager = TMDBAPIManager(apiKey: apiKey)
     }
     
     //MARK: - Methods

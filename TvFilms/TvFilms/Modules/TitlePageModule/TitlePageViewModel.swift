@@ -12,7 +12,7 @@ import Foundation
 protocol TitlePageViewModelProtocol {
     var titleName: String { get }
     var overview: String { get }
-    var voteAverage: String { get }
+    var voteAverage: Double? { get }
     var isFavourite: Bool { get }
     var viewModelDidChange: ((TitlePageViewModelProtocol) -> Void)? { get set }
     func fetchPosterImage(completion: @escaping (Data?) -> Void)
@@ -35,8 +35,8 @@ class TitlePageViewModel: TitlePageViewModelProtocol {
         title.overview ?? ""
     }
     
-    var voteAverage: String {
-        displayVoteAverage()
+    var voteAverage: Double? {
+        title.voteAverage
     }
     
     var isFavourite: Bool {
@@ -101,16 +101,5 @@ class TitlePageViewModel: TitlePageViewModelProtocol {
     
     func closeTitlePage() {
         router.dismiss(animated: true, completion: nil)
-    }
-    
-    //MARK: - Private methods
-    
-    private func displayVoteAverage() -> String {
-        guard let voteAverageValue = title.voteAverage else { return "No ratings" }
-        if voteAverageValue != 0 {
-            return " \(voteAverageValue) / 10"
-        } else {
-            return "No ratings"
-        }
     }
 }
